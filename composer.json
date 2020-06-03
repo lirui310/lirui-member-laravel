@@ -1,0 +1,26 @@
+{
+    "name": "lirui/lirui-member-laravel",
+    "description": "member module",
+    "authors": [
+        {
+            "name": "lirui.Orion",
+            "email": "1950767658@qq.com"
+        }
+    ],
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "lirui\\member\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "lirui\\member\\MemberServiceProvider"
+            ],
+            "aliases": {
+
+            }
+        }
+    }
+}
