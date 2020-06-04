@@ -12,6 +12,8 @@ class BaseService
     private $error;
     private $errorCode;
 
+    protected $treeTableName = 'member_tree';
+
     // member_info 表拥有的字段
     public $memberInfoColumn = [
         'member_id', 'head_image', 'mobile', 'nickname', 'name', 'sex', 'age', 'area', 'zhifubao', 'weixin',

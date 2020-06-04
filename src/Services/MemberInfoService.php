@@ -18,12 +18,14 @@ class MemberInfoService extends MemberService
                 $memberInfo->save();
                 return true;
             }
-            $this->setErrorCode();
+            $this->setError('id or info is null');
+            $this->setErrorCode(200);
             return false;
-        }catch (\Exception $e) {
-
+        } catch (\Exception $e) {
+            $this->setError($e->getMessage());
+            $this->setErrorCode(100);
+            return false;
         }
-
     }
 
     /**
@@ -48,7 +50,7 @@ class MemberInfoService extends MemberService
     public function setColumnValue(int $id, string $column, mixed $value): bool
     {
         $memberInfo = MemberInfo::find($id);
-        if (!$memberInfo || !property_exists($memberInfo, $column)){
+        if (!$memberInfo || !property_exists($memberInfo, $column)) {
             return false;
         }
         $memberInfo->$column = $value;

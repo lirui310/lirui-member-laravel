@@ -40,16 +40,13 @@ class ResetMemberTree extends Command
     public function handle()
     {
         $this->info('开始初始化member_tree');
-        DB::statement('TRUNCATE TABLE `member_tree`');
+        //DB::statement('TRUNCATE TABLE `member_tree`');
         // 初始化tree数据
         $memberTreeService = new MemberTreeService();
         $memberTreeService->initTableData();
-
         $beginId = $this->option('id');
-
         $this->info("开始更新member数据，从member表中id={$beginId} 开始生成到tree中，时间根据member数据而定，请耐心等待...");
 
-        sleep(5);
 
         $this->info('生成tree数据完成！');
     }
