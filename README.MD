@@ -2,50 +2,68 @@
 
 ### 安装
 
-composer install lirui\lirui-member-laravel
+---
+`composer install lirui\lirui-member-laravel`
 
-php artisan vendor:publish --provider lirui\member\MemberServiceProvider
+`php artisan vendor:publish --provider lirui\member\MemberServiceProvider`
 
+`php artisan migrate`
 
-### service使用 不包含字段验证 请参考提供的字段验证方法单独调用或者参考提供的API（可用于生产环境）
+`php artisan init-table`
 
-======================== MemberService ================================
+ 
+
+### service使用 字段只做基础验证 字段高级验证根据自身业务处理
+
+---
+
+##### MemberService
 
 $memberService = new lirui\member\Services\MemberService();
 
 
 
 
-======================== MemberInfoService =============================
+##### MemberInfoService
 
 
-======================== MemberAccountService ==========================
+##### MemberAccountService
 
 
-======================== MemberTreeService =============================
-
-
+##### MemberTreeService
 
 
 
 
 ### errorCode
 
-======================== 抛出异常 =============================
+---
+- 抛出异常
 
 100： 异常错误
 
-======================== 登录相关 =============================
+- 登录相关
 
 1： 会员状态不是1
 
 2： 会员username或者password不对
 
-======================== 验证相关 =============================
+- 验证相关
 
 150: username已经被注册
 
-======================== info信息相关 =============================
+- info信息相关
 
 200: 保存info信息失败，没有找到id的info信息或者info信息为空
+
+
+### artisan命令
+---
+- 初始化数据表：
+`php artisan init-table` 清空所有表 初始化 member_tree表的数据 第一次安装或者清空测试数据使用
+
+- Tree结构重新生成：
+`php artisan reset-member-tree` 初始化 member_tree表的数据 根据member数据重新生成tree中的数据 可用于修复tree的数据
+
+`php artisan reset-member-tree --id=1` 可以传参数 默认id=1开始
 

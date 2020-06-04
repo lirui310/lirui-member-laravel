@@ -2,6 +2,9 @@
 
 namespace lirui\member;
 
+use lirui\member\Commands\InitTable;
+use lirui\member\Commands\ResetMemberTree;
+
 class MemberServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     /**
@@ -11,7 +14,6 @@ class MemberServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function boot()
     {
-        //publish相关文件
         $this->publishes([
             __DIR__ . '/config/memberModule.php' => config_path('memberModule.php'),
         ]);
@@ -19,6 +21,13 @@ class MemberServiceProvider extends \Illuminate\Support\ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
 
         $this->loadRoutesFrom(__DIR__.'/routes.php');
+
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                InitTable::class,
+                ResetMemberTree::class,
+            ]);
+        }
     }
 
     /**
@@ -28,6 +37,8 @@ class MemberServiceProvider extends \Illuminate\Support\ServiceProvider
      */
     public function register()
     {
-        //
+        $this->mergeConfigFrom(
+            __DIR__ . '/config/memberModule.php', 'memberModule'
+        );
     }
 }
