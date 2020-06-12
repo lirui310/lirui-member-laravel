@@ -36,7 +36,7 @@ class MemberService extends BaseService
             $id = $member->id;
             if ($setTree) {
                 // 创建tree 关系表
-
+                $this->treeAdd($id, $pid);
             }
             // 创建基本信息
             $memberInfo = new MemberInfo();

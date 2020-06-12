@@ -4,8 +4,10 @@
 namespace lirui\member\Services;
 
 
+use Illuminate\Support\Facades\DB;
 use lirui\member\Models\Member;
 use lirui\member\Models\MemberInfo;
+use lirui\member\Models\MemberTree;
 
 class BaseService
 {
@@ -37,7 +39,7 @@ class BaseService
     /**
      * @return mixed
      */
-    public function getError()
+    public function getError(): string
     {
         return $this->error;
     }
@@ -45,7 +47,7 @@ class BaseService
     /**
      * @param mixed $error
      */
-    public function setError($error)
+    public function setError(string $error)
     {
         $this->error = $error;
     }
@@ -53,7 +55,7 @@ class BaseService
     /**
      * @return mixed
      */
-    public function getErrorCode()
+    public function getErrorCode(): int
     {
         return $this->errorCode;
     }
@@ -61,12 +63,47 @@ class BaseService
     /**
      * @param mixed $errorCode
      */
-    public function setErrorCode($errorCode)
+    public function setErrorCode(int $errorCode)
     {
         $this->errorCode = $errorCode;
     }
 
-    protected function loginLog(int $id, string $username) : bool
+    /**
+     * 添加tree
+     * @param int $member_id
+     * @param int $pid
+     */
+    protected function treeAdd(int $member_id, int $pid)
+    {
+        $pData = DB::table($this->treeTableName)
+            ->where(['member_id' => $pid])
+            ->first();
+        if (!$pData) {
+            $pid = 0;
+            $lft = DB::table($this->treeTableName)
+                ->where(['uid' => $pid])
+                ->value('lft');
+        } else {
+            $lft = $pData->lft;
+        }
+
+        // 更新操作
+        DB::table($this->treeTableName)
+            ->where('rgt', '>', $lft)
+            ->increment('rgt', 2);
+        DB::table($this->treeTableName)
+            ->where('lft', '>', $lft)
+            ->increment('lft', 2);
+
+        $memberTree = new MemberTree();
+        $memberTree->member_id = $member_id;
+        $memberTree->pid = $pid;
+        $memberTree->lft = $lft + 1;
+        $memberTree->rgt = $lft + 2;
+        $memberTree->save();
+    }
+
+    protected function loginLog(int $id, string $username): bool
     {
         return true;
     }
@@ -76,16 +113,17 @@ class BaseService
      * @param array $info
      * @return bool
      */
-    public function checkInfoColumn(array $info) : bool
+    public function checkInfoColumn(array $info): bool
     {
         return true;
     }
+
     /**
      * 检查 account 中的字段 是否 在数据库表字段 如果全在 返回 true  如果存在account中 但是不存在 数据表中 返回false 这样的account 是不能save的
      * @param array $info
      * @return bool
      */
-    public function checkAccountColumn(array $account) : bool
+    public function checkAccountColumn(array $account): bool
     {
         return true;
     }

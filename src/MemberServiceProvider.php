@@ -3,6 +3,7 @@
 namespace lirui\member;
 
 use lirui\member\Commands\InitTable;
+use lirui\member\Commands\MemberTreeHelp;
 use lirui\member\Commands\ResetMemberTree;
 
 class MemberServiceProvider extends \Illuminate\Support\ServiceProvider
@@ -26,6 +27,7 @@ class MemberServiceProvider extends \Illuminate\Support\ServiceProvider
             $this->commands([
                 InitTable::class,
                 ResetMemberTree::class,
+                MemberTreeHelp::class,
             ]);
         }
     }
