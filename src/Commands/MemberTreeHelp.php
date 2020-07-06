@@ -58,7 +58,7 @@ class MemberTreeHelp extends Command
             $params = $method->getParameters();
             $count = count($params);
             if ($name == $methodName) {
-                $this->doMethod($name, $count, $param1, $param2, $param3);
+                $result = $this->doMethod($name, $count, $param1, $param2, $param3);
                 $this->info($result);
                 break;
             }
