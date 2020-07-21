@@ -12,6 +12,8 @@
 `php artisan init-table`
 
  
+ #### 注意 请设置 config/database中设置 strict修改为false 非严格模式运行mysql 否则获取节点统计SQL异常
+ 
 
 ### service使用 字段只做基础验证 字段高级验证根据自身业务处理
 

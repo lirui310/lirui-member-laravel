@@ -34,4 +34,25 @@ return [
     // 2个整形账户（int类型）
     'account_7' => '账户7(整数)',
     'account_8' => '账户8(整数)',
+
+    // 是否允许账户小于0
+    'account_1_below_0' => false,
+    'account_2_below_0' => false,
+    'account_3_below_0' => false,
+    'account_4_below_0' => false,
+    'account_5_below_0' => false,
+    'account_6_below_0' => false,
+    'account_7_below_0' => false,
+    'account_8_below_0' => false,
+
+    // 账户变动类型 可自行添加
+    'account_type' => [
+        0 => '类型0',
+        1 => '类型1',
+        2 => '类型2',
+        3 => '类型3',
+        4 => '类型4',
+        5 => '类型5',
+    ],
+
 ];

@@ -7,6 +7,11 @@ use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use lirui\member\Services\MemberTreeService;
 
+/**
+ * 方便测试使用
+ * Class MemberTreeHelp
+ * @package lirui\member\Commands
+ */
 class MemberTreeHelp extends Command
 {
     /**
@@ -44,10 +49,14 @@ class MemberTreeHelp extends Command
      */
     public function handle()
     {
-        $methodName = $this->option('method');
-        $param1 = $this->option('param1');
-        $param2 = $this->option('param2');
-        $param3 = $this->option('param3');
+        $methodName = $this->argument('method');
+        $param1 = $this->argument('param1');
+        $param2 = $this->argument('param2');
+        $param3 = $this->argument('param3');
+
+        $param1 = $param1 ?? null;
+        $param2 = $param2 ?? null;
+        $param3 = $param3 ?? null;
 
         $reflection = new \ReflectionClass('lirui\member\Services\MemberTreeService');
 
@@ -65,7 +74,7 @@ class MemberTreeHelp extends Command
         }
     }
 
-    protected function doMethod(string $name, int $count = 0, mixed $param1 = null, mixed $param2 = null, mixed $param3 = null): string
+    protected function doMethod(string $name, int $count = 0, $param1 = null, $param2 = null, $param3 = null): string
     {
         $memberTreeService = new MemberTreeService();
         switch ($count) {

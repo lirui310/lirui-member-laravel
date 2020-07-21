@@ -70,10 +70,10 @@ class BaseService
 
     /**
      * 添加tree
-     * @param int $member_id
+     * @param int $memberId
      * @param int $pid
      */
-    protected function treeAdd(int $member_id, int $pid)
+    protected function treeAdd(int $memberId, int $pid)
     {
         $pData = DB::table($this->treeTableName)
             ->where(['member_id' => $pid])
@@ -96,7 +96,7 @@ class BaseService
             ->increment('lft', 2);
 
         $memberTree = new MemberTree();
-        $memberTree->member_id = $member_id;
+        $memberTree->member_id = $memberId;
         $memberTree->pid = $pid;
         $memberTree->lft = $lft + 1;
         $memberTree->rgt = $lft + 2;
