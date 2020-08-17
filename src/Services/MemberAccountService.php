@@ -47,25 +47,45 @@ class MemberAccountService extends MemberService
         }
     }
 
-    public function setAccount(int $memberId, int $account, int $type, $number, string $remark = ''): bool
+    public function getTableAndAccount(int $memberId, int $account): array
     {
         // 处理获取的表
         $m = $memberId % 3;
         $table = 'table' . $m;
-        $tableName = $this->$table;
+        $tableName = $this->$table ?? null;
 
         // 组装账户
         $accountName = 'account_' . $account;
         $accountBelowString = 'account_' . $account . '_below_0';
-        $accountBelow0 = $this->$accountBelowString;
+        $accountBelow0 = $this->$accountBelowString ?? null;
 
-        $precision = $this->getPrecision($account);
+        return [$tableName, $accountName, $accountBelow0];
+    }
 
+    // 账户发生变动
+    public function setAccount(int $memberId, int $account, int $type, $number, string $remark = ''): bool
+    {
         try {
+            if (!in_array($account, [1, 2, 3, 4, 5, 6, 7, 8])) {
+                throw new \Exception('account error');
+            }
+            $tableAndAccount = $this->getTableAndAccount($memberId, $account);
+            $tableName = $tableAndAccount[0];
+            // 组装账户
+            $accountName = $tableAndAccount[1];
+            $accountBelow0 = $tableAndAccount[2];
+
+            if (!$tableName || !$accountBelow0) {
+                throw new \Exception('tableName or accountBelow0 error');
+            }
+
+            // 获取精确位置
+            $precision = $this->getPrecision($account);
+
             DB::beginTransaction();
             $memberAccount = DB::table('member_account')->where(['member_id' => $memberId])->lockForUpdate()->get();
             if (!$memberAccount) {
-                throw new \Exception('account error');
+                throw new \Exception('member_account is null');
             }
             $accountValue = $memberAccount->$accountName;
             $newAccountValue = bcadd($accountValue, $number, $precision);
@@ -90,6 +110,37 @@ class MemberAccountService extends MemberService
             $this->setErrorCode(100);
             return false;
         }
+    }
+
+    // 获取账户变动日志
+    public function getAccountLog(int $memberId, int $account, int $type = -1, int $limit = 20, int $offset = 0): array
+    {
+        if (!in_array($account, [0, 1, 2, 3, 4, 5, 6, 7, 8])) {
+            return [];
+        }
+
+        $where = [];
+        if ($type >= 0) {
+            $where['type'] = $type;
+        }
+
+        $tableAndAccount = $this->getTableAndAccount($memberId, $account);
+        $tableName = $tableAndAccount[0];
+        // 组装账户
+        $accountName = $tableAndAccount[1];
+        // 等于0 查询所有账户
+        if ($account > 0) {
+            $where['account'] = $accountName;
+        }
+
+        $buildSql = DB::table($tableName)->where($where);
+        $data = $buildSql
+            ->offset($offset)
+            ->limit($limit)
+            ->get();
+        $count = $buildSql->count();
+
+        return ['data' => $data, 'count' => $count];
     }
 
 }
